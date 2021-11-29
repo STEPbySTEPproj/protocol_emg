@@ -1,129 +1,72 @@
 # Protocol_EMG
 
-## Aim
-Code to calculate the EMG performance indicators (activation and cocontraction indexes) whithin the STEPbySTEP project
-
-## Requirements
+REQUIREMENTS
 
 MATLAB 2018 or higher versions
 
-## Install
+INSTALL
 
 Download the program and relative directories
-Insert the YAML directory in the Matlab path
+Insert the "tool" directory in the Matlab path
 
-## Functioning
+FUNTIONING
 
-Launch [Indexes, GaitPhases] = SbS_EMG_indexes(FILENAME, CHforIdxFilename, Nexus, toBePlot)
-
-(The output terms are optional)
+Launch [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(filenameIN, CHforIdxFilename, OUTPUTdir) 
+[Output terms are optional]
 
 Results will be saved authomatically in the output directory.
 
+AIM
 
 The program will load the FILENAME csv file with the EMG signals and calculate the activation indexes for each channels in the CHforINDEXES file.
 The cocontraction index will be calculated for each couple in the CHforINDEXES file.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%%%%%%%                                                                                       %%%%%%%%%%%%
-
-%%%%%%%%%%%% [Indexes, GaitPhases] = SbS_EMG_indexes(FILENAME, CHforIdxFilename, Nexus, toBePlot)  %%%%%%%%%%%%
-
-%%%%%%%%%%%%                                                                                       %%%%%%%%%%%%
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%                                                                                       %%%%%%%%%%%%
+%%%%%%%%%%%%  [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(filenameIN, ...                 %%%%%%%%%%%%
+%%%%%%%%%%%%                          CHforIdxFilename, OUTPUTdir)                                 %%%%%%%%%%%%
+%%%%%%%%%%%%                                                                                       %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%                                                                                                         %%%
-
-%%%         Eurobench STEPbySTEP routine to calculate SbS EMG indexes                                       %%%
-
+%%%         Eurobench STEPbySTEP routine to calculate SbS indexes from EMG in Eurobench format              %%%
 %%%                                                                                                         %%%
-
-%%%         IN:     filename            --->    STRING                                                      %%%
-
-%%%                                             name of the CSV file with EMG and                           %%%
-
-%%%                                             acceleration data from the acquisition system               %%%
-
+%%%         IN:     filenameIN          --->    STRING                                                      %%%
+%%%                                             '.\INPUTdir\filename.csv' with EMG data in EB format        %%%
 %%%                                                                                                         %%%
-
-%%%                 CHforIdxFilename    --->    YAML file with couples of numbers                           %%%
-
-%%%                                             CHforINDEXES to calculate cocontraction                     %%%
-
-%%%                                             e.g. CHforINDEXES:                                          %%%
-
-%%%                                                                 - [1 2]                                 %%%
-
-%%%                                                                 - [1 3]                                 %%%
-
-%%%                                                                 - [2 3]                                 %%%
-
+%%%                 CHforIdxFilename    --->    STRING                                                      %%%
+%%%                                             '.\INPUTdir\filename.yml' file with couples of numbers      %%%
+%%%                                             to calculate cocontraction                                  %%%
+%%%                                             e.g. CHforINDEXES: [ [ [6 7], [10 11], [15 16] ]            %%%
+%%%													    %%%
+%%%                 OUTPUTdir           --->    STRING                                                      %%%
+%%%                                             '.\OUTPUTdir output directory where indexes are saved       %%% 
 %%%                                                                                                         %%%
-
-%%%                 Nexus               --->    BOOL                                                        %%%
-
-%%%                                             0 acquired with Delsys software                             %%%
-
-%%%                                             1 acquired with Nexus software                              %%%
-
 %%%                                                                                                         %%%
-
-%%%                 toBePlot            --->    BOOL                                                        %%%
-
-%%%                                             0 do not plot the data                                      %%%
-
-
-%%%                                             1 plot the data                                             %%%
-
-%%%                                                                                                         %%%
-
 %%%         OUT:    Indexes             --->    STRUCT                                                      %%%
-
 %%%                                             Fields:                                                     %%%
-
-%%%                                                     ActivationIndexes                                   %%%
-
-%%%                                                     CocontractionIndexes                                %%%
-
+%%%                                                     ActivationIndexes(i)                                %%%
+%%%                                                     	activation index of EMG i-channel           %%%
+%%%                                                     CocontractionIndexes(j)                             %%%
+%%%                                                         CocontractionIndexes EMG j-couple (e.g. [1 2])  %%%
 %%%                 GaitPhases          --->    STRUCT                                                      %%%
-
 %%%                                             Fields:                                                     %%%
-
 %%%                                                     Time                                                %%%
-
 %%%                                                     Perc                                                %%%
-
 %%%                                                                                                         %%%
-
+%%%         Example:    [Indexes, GaitPhases] =                                                             %%%
+%%%                     SbS_EMG_indexes('.\input\input_emg_file.csv','input\CHforINDEXES.yml','.\output\'   %%%
 %%%                                                                                                         %%%
-
 %%%                                                                                                         %%%
-
-%%%                 SUBROUTINES:    ReadYaml,LoadDelsysData, FiltButterLBH, EnvelopeHilbert, ...            %%%
-
-%%%                                 discrete_integrate, cocontraction_winter, WriteYaml                     %%%
-
+%%%         SUBROUTINES:            ReadYaml, FiltButterLBH, EnvelopeHilbert, ...               	    %%%
+%%%                                 discrete_integrate, cocontraction_winter, 				    %%%
 %%%                                                                                                         %%%
-
 %%%                                                                                                         %%%
-
 %%%         Author:     Marco Caimmi                                                                        %%%
-
 %%%                     STIIMA Nationl Research Council of Italy                                            %%%
-
 %%%                     marco.caimmi@stiima.cnr.it                                                          %%%
-
 %%%                     marco.caimmi@gmail.com                                                              %%%
-
 %%%                                                                                                         %%%
-
 %%%         Year:       2021                                                                                %%%
-
 %%%                                                                                                         %%%
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 

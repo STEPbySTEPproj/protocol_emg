@@ -1,10 +1,6 @@
-# CHANNELS
+EMGchannels: [ 1, 2 ,3 ,4 ,5 ]
+EMGcouples: [ [6 7], [10 11], [15 16] ]
 
-CHANNELS:
-    - [1 2]
-    - [2 3]
-    - [3 4]
-    - [4 5]
 
     
 
