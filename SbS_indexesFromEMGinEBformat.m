@@ -66,6 +66,11 @@ if ~isfile(PHASESfilenameIN)
     return;
 end
 
+if ~isfile(CHforIdxFilename)
+    disp(['File ', CHforIdxFilename, ' does not exist']);
+    return;
+end
+
 EndINPUTPath = max( strfind(EMGfilenameIN, '/') );
 if isempty(EndINPUTPath)
     EndINPUTPath = max( strfind(EMGfilenameIN,'\') );
