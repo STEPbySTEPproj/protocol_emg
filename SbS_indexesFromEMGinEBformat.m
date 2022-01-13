@@ -3,7 +3,7 @@ function [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(EMGfilenameIN, PHA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%                                                                                       %%%%%%%%%%%%
 %%%%%%%%%%%%  [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(EMGfilenameIN, ...              %%%%%%%%%%%%
-%%%%%%%%%%%%                          PHASESfilenameIN,CHforIdxFilename, OUTPUTdir)                %%%%%%%%%%%%
+%%%%%%%%%%%%                          PHASESfilenameIN, CHforIdxFilename, OUTPUTdir)               %%%%%%%%%%%%
 %%%%%%%%%%%%                                                                                       %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%                                                                                                         %%%
@@ -12,7 +12,7 @@ function [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(EMGfilenameIN, PHA
 %%%         IN:     EMGfilenameIN      --->    STRING                                                       %%%
 %%%                                             '.\INPUTdir\filename.csv' with EMG data in EB format        %%%
 %%%                 PHASESfilenameIN   --->    STRING                                                       %%%
-%%%                                             '.\INPUTdir\filename.ylm' with gait phases in EB format     %%%
+%%%                                             '.\INPUTdir\filename.yml' with gait phases in EB format     %%%
 %%%                                                                                                         %%%
 %%%                 CHforIdxFilename    --->    STRING                                                      %%%
 %%%                                             '.\INPUTdir\filename.yml' file with                         %%% 
@@ -38,7 +38,8 @@ function [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(EMGfilenameIN, PHA
 %%%                                                     Perc                                                %%%
 %%%                                                                                                         %%%
 %%%         Example:    [Indexes, GaitPhases] =                                                             %%%
-%%%                     SbS_EMG_indexes('.\input\input_emg_file.csv','input\CHforINDEXES.yml','.\output\'   %%%
+%%%                     SbS_EMG_indexes('.\input\input_emg_file.csv', ...                                   %%%
+%%%                     'input\subject_3_cond_1_run_1_phases.yml', 'input\CHforINDEXES.yml','.\output\'     %%%
 %%%                                                                                                         %%%
 %%%                                                                                                         %%%
 %%%         SUBROUTINES:            read_simple_yaml, FiltButterLBH, EnvelopeHilbert, ...                   %%%
@@ -54,13 +55,25 @@ function [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(EMGfilenameIN, PHA
 %%%                                                                                                         %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+addpath('tools')
+
+if ~isfile(EMGfilenameIN)
+    disp(['File ', EMGfilenameIN, ' does not exist']);
+    return;
+end
+if ~isfile(PHASESfilenameIN)
+    disp(['File ', PHASESfilenameIN, ' does not exist']);
+    return;
+end
+
 EndINPUTPath = max( strfind(EMGfilenameIN, '/') );
 if isempty(EndINPUTPath)
     EndINPUTPath = max( strfind(EMGfilenameIN,'\') );
 end
 if isempty(EndINPUTPath)
-    msgstring = ["Error in SbS_indexesFromEMGinEBformat line 58."; "Invalid INPUT filename! Check path!"; "(e.g. '/INPUTdir/filename.yml' )"];
-    waitfor( msgbox(msgstring) );
+    here = dbstack;
+    msg = sprintf('Error %s at %i. ', here(end).file, here(end).line);
+    disp([msg, 'Invalid INPUT filename! Check path! (e.g. "/INPUTdir/filename.yml")'])
     return
 end
 
@@ -557,14 +570,12 @@ GaitPhases.Perc.RIGHT.PRESWING.value.stdev = std(GaitPhases.Perc.RIGHT.PRESWING.
     data_perc = [data_perc_left; data_perc_right];
 
 
-cd(OUTPUTdir)
-    Outputfilename = strcat( filenameIN, '--GaitPhases_Time.yml');
+    Outputfilename = strcat(OUTPUTdir, '\', filenameIN, '--GaitPhases_Time.yml');
     StoreMatrix2Yml(Outputfilename, data_time, rowLabels, colLabels);
     %WriteYaml(Outputfilename, GaitPhases.Time,0);
-    Outputfilename = strcat( filenameIN, '--GaitPhases_Perc.yml');
+    Outputfilename = strcat(OUTPUTdir, '\', filenameIN, '--GaitPhases_Perc.yml');
     StoreMatrix2Yml(Outputfilename, data_perc, rowLabels, colLabels);
     %WriteYaml(Outputfilename, GaitPhases.Perc,0);
-cd(ROOTdir)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

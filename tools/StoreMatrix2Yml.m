@@ -31,7 +31,7 @@ RowLabel_str = 'row_label: [';
 for i = 1:NumRows
     RowLabel_str = strcat(RowLabel_str, rowLabels{i});
     if i ~= NumRows
-        RowLabel_str = strcat(RowLabel_str, ',');
+        RowLabel_str = strcat(RowLabel_str, ", ");
     end
 end
     RowLabel_str =strcat( RowLabel_str,("]\n") );
@@ -42,7 +42,7 @@ ColLabel_str = "col_label: [";
 for i = 1:NumCols
     ColLabel_str = strcat(ColLabel_str, colLabels{i});
     if i ~= NumCols
-        ColLabel_str = strcat(ColLabel_str, ",");
+        ColLabel_str = strcat(ColLabel_str, ", ");
     end
 end
 ColLabel_str =strcat( ColLabel_str,("]\n") );

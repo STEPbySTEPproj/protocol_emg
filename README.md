@@ -1,15 +1,14 @@
 # Protocol_EMG
 
-REQUIREMENTS
+## REQUIREMENTS
 
 MATLAB 2018 or higher versions
 
-INSTALL
+## INSTALL
 
 Download the program and relative directories
-Insert the "tool" directory in the Matlab path
 
-FUNTIONING
+# USAGE
 
 Launch [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(filenameIN, CHforIdxFilename, OUTPUTdir) 
 [Output terms are optional]
@@ -21,10 +20,11 @@ AIM
 The program will load the FILENAME csv file with the EMG signals and calculate the activation indexes for each channels in the CHforINDEXES file.
 The cocontraction index will be calculated for each couple in the CHforINDEXES file.
 
+```matlab
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%                                                                                       %%%%%%%%%%%%
 %%%%%%%%%%%%  [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(filenameIN, ...                 %%%%%%%%%%%%
-%%%%%%%%%%%%                          CHforIdxFilename, OUTPUTdir)                                 %%%%%%%%%%%%
+%%%%%%%%%%%%                          PHASESfilenameIN, CHforIdxFilename, OUTPUTdir)               %%%%%%%%%%%%
 %%%%%%%%%%%%                                                                                       %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%                                                                                                         %%%
@@ -32,6 +32,9 @@ The cocontraction index will be calculated for each couple in the CHforINDEXES f
 %%%                                                                                                         %%%
 %%%         IN:     filenameIN          --->    STRING                                                      %%%
 %%%                                             '.\INPUTdir\filename.csv' with EMG data in EB format        %%%
+%%%                                                                                                         %%%
+%%%                 PHASESfilenameIN   --->    STRING                                                       %%%
+%%%                                             '.\INPUTdir\filename.ylm' with gait phases in EB format     %%%
 %%%                                                                                                         %%%
 %%%                 CHforIdxFilename    --->    STRING                                                      %%%
 %%%                                             '.\INPUTdir\filename.yml' file with couples of numbers      %%%
@@ -45,7 +48,7 @@ The cocontraction index will be calculated for each couple in the CHforINDEXES f
 %%%         OUT:    Indexes             --->    STRUCT                                                      %%%
 %%%                                             Fields:                                                     %%%
 %%%                                                     ActivationIndexes(i)                                %%%
-%%%                                                     	activation index of EMG i-channel           %%%
+%%%                                                     	activation index of EMG i-channel               %%%
 %%%                                                     CocontractionIndexes(j)                             %%%
 %%%                                                         CocontractionIndexes EMG j-couple (e.g. [1 2])  %%%
 %%%                 GaitPhases          --->    STRUCT                                                      %%%
@@ -54,11 +57,12 @@ The cocontraction index will be calculated for each couple in the CHforINDEXES f
 %%%                                                     Perc                                                %%%
 %%%                                                                                                         %%%
 %%%         Example:    [Indexes, GaitPhases] =                                                             %%%
-%%%                     SbS_EMG_indexes('.\input\input_emg_file.csv','input\CHforINDEXES.yml','.\output\'   %%%
+%%%                     SbS_EMG_indexes('.\input\input_emg_file.csv', '.\input\input_emg_file.csv', ...     %%%
+%%%                     'input\CHforINDEXES.yml','.\output\'                                                %%%
 %%%                                                                                                         %%%
 %%%                                                                                                         %%%
-%%%         SUBROUTINES:            ReadYaml, FiltButterLBH, EnvelopeHilbert, ...               	    %%%
-%%%                                 discrete_integrate, cocontraction_winter, 				    %%%
+%%%         SUBROUTINES:            ReadYaml, FiltButterLBH, EnvelopeHilbert, ...               	        %%%
+%%%                                 discrete_integrate, cocontraction_winter, 				                %%%
 %%%                                                                                                         %%%
 %%%                                                                                                         %%%
 %%%         Author:     Marco Caimmi                                                                        %%%
@@ -69,4 +73,29 @@ The cocontraction index will be calculated for each couple in the CHforINDEXES f
 %%%         Year:       2021                                                                                %%%
 %%%                                                                                                         %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+```
 
+
+## ACKNOWLEDGEMENTS
+
+<a href="http://eurobench2020.eu">
+  <img src="http://eurobench2020.eu/wp-content/uploads/2018/06/cropped-logoweb.png"
+       alt="rosin_logo" height="60" >
+</a>
+
+Supported by Eurobench - the European robotic platform for bipedal locomotion benchmarking.
+More information: [Eurobench website][eurobench_website]
+
+<img src="http://eurobench2020.eu/wp-content/uploads/2018/02/euflag.png"
+     alt="eu_flag" width="100" align="left" >
+
+This project has received funding from the European Union’s Horizon 2020
+research and innovation programme under grant agreement no. 779963.
+
+The opinions and arguments expressed reflect only the author‘s view and
+reflect in no way the European Commission‘s opinions.
+The European Commission is not responsible for any use that may be made
+of the information it contains.
+
+[eurobench_logo]: http://eurobench2020.eu/wp-content/uploads/2018/06/cropped-logoweb.png
+[eurobench_website]: http://eurobench2020.eu "Go to website"

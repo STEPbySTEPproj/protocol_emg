@@ -1,4 +1,4 @@
 type: 'matrix'
-row_label: [stance_left,swing_left,loadresponse_left,preswing_left,gaitcycle_left,stance_right,swing_right,loadresponse_right,preswing_right,gaitcycle_right]
-col_label: [Step1,Step2,Step3,Step4,Step5,Step6]
+row_label: [stance_left, swing_left, loadresponse_left, preswing_left, gaitcycle_left, stance_right, swing_right, loadresponse_right, preswing_right, gaitcycle_right]
+col_label: [Step1, Step2, Step3, Step4, Step5, Step6]
 value: [ [0.00894, 0.00421, 0.00526, 0.00515, 0.00412, 0.00600], [0.00227, 0.00267, 0.00464, 0.00200, 0.00133, 0.00123], [0.00358, 0.00092, 0.00123, 0.00181, 0.00127, 0.00245], [0.00225, 0.00101, 0.00120, 0.00098, 0.00076, 0.00121], [0.01121, 0.00688, 0.00990, 0.00715, 0.00545, 0.00723], [0.01166, 0.00544, 0.00491, 0.00765, 0.00425, 0.00454], [0.00312, 0.00228, 0.00284, 0.00236, 0.00209, 0.00234], [0.00225, 0.00101, 0.00120, 0.00098, 0.00076, NaN], [0.00358, 0.00092, 0.00123, 0.00181, 0.00127, 0.00245], [0.01478, 0.00772, 0.00774, 0.01001, 0.00634, 0.00688] ]
