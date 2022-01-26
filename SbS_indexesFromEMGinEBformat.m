@@ -575,10 +575,10 @@ GaitPhases.Perc.RIGHT.PRESWING.value.stdev = std(GaitPhases.Perc.RIGHT.PRESWING.
     data_perc = [data_perc_left; data_perc_right];
 
 
-    Outputfilename = strcat(OUTPUTdir, '\', filenameIN, '--GaitPhases_Time.yml');
+    Outputfilename = strcat(OUTPUTdir, '/pi_gaitphases_time.yml');
     StoreMatrix2Yml(Outputfilename, data_time, rowLabels, colLabels);
     %WriteYaml(Outputfilename, GaitPhases.Time,0);
-    Outputfilename = strcat(OUTPUTdir, '\', filenameIN, '--GaitPhases_Perc.yml');
+    Outputfilename = strcat(OUTPUTdir, '/pi_gaitphases_perc.yml');
     StoreMatrix2Yml(Outputfilename, data_perc, rowLabels, colLabels);
     %WriteYaml(Outputfilename, GaitPhases.Perc,0);
 
@@ -729,11 +729,10 @@ for iCh = EMGchannels
     
     data = [data_left; data_right];
      
-    cd(OUTPUTdir)
-        Outputfilename = strcat( filenameIN, '--ActIndex_', EMG(1).Name{iCh},'.yml');
-        StoreMatrix2Yml(Outputfilename, data, rowLabels, colLabels);
-        %WriteYaml(Outputfilename, ActivationIndexes(iCh),0);
-    cd(ROOTdir)
+    Outputfilename = strcat(OUTPUTdir, '/pi_actindex_', EMG(1).Name{iCh},'.yml');
+    StoreMatrix2Yml(Outputfilename, data, rowLabels, colLabels);
+    %WriteYaml(Outputfilename, ActivationIndexes(iCh),0);
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -868,11 +867,9 @@ for iCp = 1 : NumCouples
     
     data = [data_left; data_right];
  
-    cd(OUTPUTdir)
-    Outputfilename = strcat( filenameIN, '--CoCoIndex_',EMG(1).Name{Ch_1} ,'-vs-', EMG(1).Name{Ch_2},'.yml');
+    Outputfilename = strcat( OUTPUTdir, '/pi_cocoindex_',EMG(1).Name{Ch_1} ,'-vs-', EMG(1).Name{Ch_2},'.yml');
     StoreMatrix2Yml(Outputfilename, data, rowLabels, colLabels);
  %  WriteYaml(Outputfilename, CocontractionIndexes(iCp),0);
-    cd(ROOTdir)
    
 end
 

@@ -1,19 +1,21 @@
 # Protocol_EMG
 
-## REQUIREMENTS
+## Requirements
 
 MATLAB 2018 or higher versions
 
-## INSTALL
+## Install
 
 Download the program and relative directories
 
-# USAGE
+A docker-based use (Linux only) is described in [Docker](#docker).
+
+## Usage
 
 Launch [Indexes, GaitPhases] = SbS_indexesFromEMGinEBformat(filenameIN, CHforIdxFilename, OUTPUTdir) 
 [Output terms are optional]
 
-Results will be saved authomatically in the output directory.
+Results will be saved automatically in the output directory.
 
 AIM
 
@@ -40,9 +42,9 @@ The cocontraction index will be calculated for each couple in the CHforINDEXES f
 %%%                                             '.\INPUTdir\filename.yml' file with couples of numbers      %%%
 %%%                                             to calculate cocontraction                                  %%%
 %%%                                             e.g. CHforINDEXES: [ [ [6 7], [10 11], [15 16] ]            %%%
-%%%													    %%%
+%%%													                                           %%%
 %%%                 OUTPUTdir           --->    STRING                                                      %%%
-%%%                                             '.\OUTPUTdir output directory where indexes are saved       %%% 
+%%%                                             '.\OUTPUTdir output directory where indexes are saved       %%%
 %%%                                                                                                         %%%
 %%%                                                                                                         %%%
 %%%         OUT:    Indexes             --->    STRUCT                                                      %%%
@@ -62,7 +64,7 @@ The cocontraction index will be calculated for each couple in the CHforINDEXES f
 %%%                                                                                                         %%%
 %%%                                                                                                         %%%
 %%%         SUBROUTINES:            ReadYaml, FiltButterLBH, EnvelopeHilbert, ...               	        %%%
-%%%                                 discrete_integrate, cocontraction_winter, 				                %%%
+%%%                                 discrete_integrate, cocontraction_winter, 				             %%%
 %%%                                                                                                         %%%
 %%%                                                                                                         %%%
 %%%         Author:     Marco Caimmi                                                                        %%%
@@ -75,8 +77,28 @@ The cocontraction index will be calculated for each couple in the CHforINDEXES f
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ```
 
+## Docker
 
-## ACKNOWLEDGEMENTS
+_This is only valid from Linux machines._
+Tested with `Matlab R2021a`.
+
+Docker images can be generated using the command stored in [docker_gen.m](docker_gen.m).
+Launched from the Matlab interface, it generates the docker image `pi_sbs_emg`.
+
+Note the image can also be uploaded from the Eurobench Docker Hub:
+
+```term
+docker pull eurobenchtest/pi_sbs_emg:latest
+```
+
+Then the image can be launched as follows:
+
+```term
+docker run --rm -v $PWD/input:/in -v $PWD/output:/out pi_sbs_emg /in/subject_3_cond_1_run_1.csv /in/subject_3_cond_1_run_1_phases.yml /in/CHforINDEXES.yml /out
+```
+
+
+## Acknowledgements
 
 <a href="http://eurobench2020.eu">
   <img src="http://eurobench2020.eu/wp-content/uploads/2018/06/cropped-logoweb.png"
