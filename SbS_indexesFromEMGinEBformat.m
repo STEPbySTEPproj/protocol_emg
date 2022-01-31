@@ -118,6 +118,7 @@ EMG = struct();
 %%%%%%%%
 EMG.Time = EMGDataTable(:,1).Variables;
 EMG.Data = EMGDataTable(:,2:end).Variables;
+EMG.Data = round(EMGDataTable(:,2:end).Variables,4);
 EMG.Name = erase(EMGDataTable(:,2:end).Properties.VariableNames,'x');
 EMG.sR = round (length(EMG.Time)/EMG.Time(end) );
 
@@ -133,11 +134,11 @@ for iCh = 1: NumEMGCh
     EMG(2).Name{iCh} = strcat(EMG(1).Name{iCh}, 'HilbEnvelop');
 end
 
-EMG(2).Data = FiltButterLBH(EMG(1).Data,5,[45 55],2000, 'Bs');
+EMG(2).Data = round( FiltButterLBH(EMG(1).Data,5,[45 55],2000, 'Bs'), 4);  
 
 %%%% Envelope by Hilbert
 %EMG(2).Data = EnvelopeHilbertButterworthFilt(DataFilt, EMG(1).sR);
-EMG(3).Data = EnvelopeHilbert(EMG(2).Data, EMG(1).sR);
+EMG(3).Data = round( EnvelopeHilbert(EMG(2).Data, EMG(1).sR), 4);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ACTIVATION INDEX calculation
 %
@@ -384,16 +385,16 @@ Data = EMG(3).Data;
 %  L_ or R_ ESW stands for ... Left/Right EndSwing
 
 NumLeftSteps = numel( Phases.begin_stance_left{1} );
-L_BST = cell2mat( Phases.begin_stance_left );
-L_EST = cell2mat( Phases.endStance_left  ); % same as ... left BeginSwing
+L_BST = round( cell2mat( Phases.begin_stance_left ), 2); 
+L_EST = round( cell2mat( Phases.endStance_left  ), 2); % same as ... left BeginSwing
 L_BSW = L_EST;
-L_ESW = cell2mat( Phases.endSwing_left  );
+L_ESW = round( cell2mat( Phases.endSwing_left  ), 2); 
 
 NumRightSteps = numel( Phases.begin_stance_right{1} );
-R_BST = cell2mat( Phases.begin_stance_right  );
-R_EST = cell2mat( Phases.end_stance_right  ); % same as ... right BeginSwing
+R_BST = round( cell2mat( Phases.begin_stance_right  ), 2);
+R_EST = round( cell2mat( Phases.end_stance_right  ), 2); % same as ... right BeginSwing
 R_BSW = R_EST;
-R_ESW = cell2mat( Phases.end_swing_right  );
+R_ESW = round( cell2mat( Phases.end_swing_right  ), 2); 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%         GAIT PHASES
@@ -403,31 +404,31 @@ R_ESW = cell2mat( Phases.end_swing_right  );
 
 % gait cycle
 GaitPhases.Time.LEFT.GAITCYCLE.value.data = [L_ESW - L_BST];
-GaitPhases.Time.LEFT.GAITCYCLE.value.mean = mean(GaitPhases.Time.LEFT.GAITCYCLE.value.data);
-GaitPhases.Time.LEFT.GAITCYCLE.value.stdev = std(GaitPhases.Time.LEFT.GAITCYCLE.value.data);
+GaitPhases.Time.LEFT.GAITCYCLE.value.mean = round( mean(GaitPhases.Time.LEFT.GAITCYCLE.value.data), 2);
+GaitPhases.Time.LEFT.GAITCYCLE.value.stdev = round( std(GaitPhases.Time.LEFT.GAITCYCLE.value.data), 2);
 %
-GaitPhases.Perc.LEFT.GAITCYCLE.value.data = GaitPhases.Time.LEFT.GAITCYCLE.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100;
-GaitPhases.Perc.LEFT.GAITCYCLE.value.mean = mean(GaitPhases.Perc.LEFT.GAITCYCLE.value.data);
-GaitPhases.Perc.LEFT.GAITCYCLE.value.stdev = std(GaitPhases.Perc.LEFT.GAITCYCLE.value.data);
+GaitPhases.Perc.LEFT.GAITCYCLE.value.data = round( GaitPhases.Time.LEFT.GAITCYCLE.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100, 1);
+GaitPhases.Perc.LEFT.GAITCYCLE.value.mean = round( mean(GaitPhases.Perc.LEFT.GAITCYCLE.value.data), 1);
+GaitPhases.Perc.LEFT.GAITCYCLE.value.stdev = round( std(GaitPhases.Perc.LEFT.GAITCYCLE.value.data), 1);
 %
 
 % stance
 GaitPhases.Time.LEFT.STANCE.value.data = [L_EST - L_BST];
-GaitPhases.Time.LEFT.STANCE.value.mean = mean(GaitPhases.Time.LEFT.STANCE.value.data);
-GaitPhases.Time.LEFT.STANCE.value.stdev = std(GaitPhases.Time.LEFT.STANCE.value.data);
+GaitPhases.Time.LEFT.STANCE.value.mean = round( mean(GaitPhases.Time.LEFT.STANCE.value.data), 2);
+GaitPhases.Time.LEFT.STANCE.value.stdev = round( std(GaitPhases.Time.LEFT.STANCE.value.data), 2);
 %
-GaitPhases.Perc.LEFT.STANCE.value.data = GaitPhases.Time.LEFT.STANCE.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100;
-GaitPhases.Perc.LEFT.STANCE.value.mean = mean(GaitPhases.Perc.LEFT.STANCE.value.data);
-GaitPhases.Perc.LEFT.STANCE.value.stdev = std(GaitPhases.Perc.LEFT.STANCE.value.data);
+GaitPhases.Perc.LEFT.STANCE.value.data = round( GaitPhases.Time.LEFT.STANCE.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100, 1);
+GaitPhases.Perc.LEFT.STANCE.value.mean = round( mean(GaitPhases.Perc.LEFT.STANCE.value.data), 1);
+GaitPhases.Perc.LEFT.STANCE.value.stdev = round( std(GaitPhases.Perc.LEFT.STANCE.value.data), 1);
 
 % swing
 GaitPhases.Time.LEFT.SWING.value.data = [L_ESW - L_BSW];
-GaitPhases.Time.LEFT.SWING.value.mean = mean(GaitPhases.Time.LEFT.SWING.value.data);
-GaitPhases.Time.LEFT.SWING.value.stdev = std(GaitPhases.Time.LEFT.SWING.value.data);
+GaitPhases.Time.LEFT.SWING.value.mean = round( mean(GaitPhases.Time.LEFT.SWING.value.data), 2);
+GaitPhases.Time.LEFT.SWING.value.stdev = round( std(GaitPhases.Time.LEFT.SWING.value.data), 2);
 %
-GaitPhases.Perc.LEFT.SWING.value.data = GaitPhases.Time.LEFT.SWING.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100;
-GaitPhases.Perc.LEFT.SWING.value.mean = mean(GaitPhases.Perc.LEFT.SWING.value.data);
-GaitPhases.Perc.LEFT.SWING.value.stdev = std(GaitPhases.Perc.LEFT.SWING.value.data);
+GaitPhases.Perc.LEFT.SWING.value.data = round( GaitPhases.Time.LEFT.SWING.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100, 1);
+GaitPhases.Perc.LEFT.SWING.value.mean = round( mean(GaitPhases.Perc.LEFT.SWING.value.data), 1);
+GaitPhases.Perc.LEFT.SWING.value.stdev = round( std(GaitPhases.Perc.LEFT.SWING.value.data), 1);
 
 % load response
 if L_BST(1) > R_BST(1)
@@ -440,16 +441,16 @@ else
     flag = 0;
 end
 GaitPhases.Time.LEFT.LOADRESPONSE.value.data = [ET - BT];
-GaitPhases.Time.LEFT.LOADRESPONSE.value.mean = mean(GaitPhases.Time.LEFT.LOADRESPONSE.value.data);
-GaitPhases.Time.LEFT.LOADRESPONSE.value.stdev = std(GaitPhases.Time.LEFT.LOADRESPONSE.value.data);
+GaitPhases.Time.LEFT.LOADRESPONSE.value.mean = round( mean(GaitPhases.Time.LEFT.LOADRESPONSE.value.data), 2);
+GaitPhases.Time.LEFT.LOADRESPONSE.value.stdev = round( std(GaitPhases.Time.LEFT.LOADRESPONSE.value.data), 2);
 %
 if flag
-    GaitPhases.Perc.LEFT.LOADRESPONSE.value.data = GaitPhases.Time.LEFT.LOADRESPONSE.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100;
+    GaitPhases.Perc.LEFT.LOADRESPONSE.value.data = round( GaitPhases.Time.LEFT.LOADRESPONSE.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100, 1);
 else
-    GaitPhases.Perc.LEFT.LOADRESPONSE.value.data = GaitPhases.Time.LEFT.LOADRESPONSE.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data(end-1)*100;
+    GaitPhases.Perc.LEFT.LOADRESPONSE.value.data = round( GaitPhases.Time.LEFT.LOADRESPONSE.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data(end-1)*100, 1);
 end
-GaitPhases.Perc.LEFT.LOADRESPONSE.value.mean = mean(GaitPhases.Perc.LEFT.LOADRESPONSE.value.data);
-GaitPhases.Perc.LEFT.LOADRESPONSE.value.stdev = std(GaitPhases.Perc.LEFT.LOADRESPONSE.value.data);
+GaitPhases.Perc.LEFT.LOADRESPONSE.value.mean = round( mean(GaitPhases.Perc.LEFT.LOADRESPONSE.value.data), 1);
+GaitPhases.Perc.LEFT.LOADRESPONSE.value.stdev = round( std(GaitPhases.Perc.LEFT.LOADRESPONSE.value.data), 1);
 
 % Preswing
 if L_BST(1) > R_BST(1)
@@ -460,41 +461,41 @@ else
     ET = L_EST; % ES stands for End Time
 end
 GaitPhases.Time.LEFT.PRESWING.value.data = [ET - BT];
-GaitPhases.Time.LEFT.PRESWING.value.mean = mean(GaitPhases.Time.LEFT.PRESWING.value.data);
-GaitPhases.Time.LEFT.PRESWING.value.stdev = std(GaitPhases.Time.LEFT.PRESWING.value.data);
+GaitPhases.Time.LEFT.PRESWING.value.mean = round( mean(GaitPhases.Time.LEFT.PRESWING.value.data), 2);
+GaitPhases.Time.LEFT.PRESWING.value.stdev = round( std(GaitPhases.Time.LEFT.PRESWING.value.data), 2);
 %
-GaitPhases.Perc.LEFT.PRESWING.value.data = GaitPhases.Time.LEFT.PRESWING.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100;
-GaitPhases.Perc.LEFT.PRESWING.value.mean = mean(GaitPhases.Perc.LEFT.PRESWING.value.data);
-GaitPhases.Perc.LEFT.PRESWING.value.stdev = std(GaitPhases.Perc.LEFT.PRESWING.value.data);
+GaitPhases.Perc.LEFT.PRESWING.value.data = round( GaitPhases.Time.LEFT.PRESWING.value.data./GaitPhases.Time.LEFT.GAITCYCLE.value.data*100, 1);
+GaitPhases.Perc.LEFT.PRESWING.value.mean = round( mean(GaitPhases.Perc.LEFT.PRESWING.value.data), 1);
+GaitPhases.Perc.LEFT.PRESWING.value.stdev = round( std(GaitPhases.Perc.LEFT.PRESWING.value.data), 1);
 
 %%%%
 % RIGHT FOOT
 
 % gait cycle
 GaitPhases.Time.RIGHT.GAITCYCLE.value.data = [R_ESW - R_BST];
-GaitPhases.Time.RIGHT.GAITCYCLE.value.mean = mean(GaitPhases.Time.RIGHT.GAITCYCLE.value.data);
-GaitPhases.Time.RIGHT.GAITCYCLE.value.stdev = std(GaitPhases.Time.RIGHT.GAITCYCLE.value.data);
+GaitPhases.Time.RIGHT.GAITCYCLE.value.mean = round( mean(GaitPhases.Time.RIGHT.GAITCYCLE.value.data), 2);
+GaitPhases.Time.RIGHT.GAITCYCLE.value.stdev = round( std(GaitPhases.Time.RIGHT.GAITCYCLE.value.data), 2);
 %
-GaitPhases.Perc.RIGHT.GAITCYCLE.value.data = GaitPhases.Time.RIGHT.GAITCYCLE.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100;
-GaitPhases.Perc.RIGHT.GAITCYCLE.value.mean = mean(GaitPhases.Perc.RIGHT.GAITCYCLE.value.data);
-GaitPhases.Perc.RIGHT.GAITCYCLE.value.stdev = std(GaitPhases.Perc.RIGHT.GAITCYCLE.value.data);
+GaitPhases.Perc.RIGHT.GAITCYCLE.value.data = round( GaitPhases.Time.RIGHT.GAITCYCLE.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100, 1);
+GaitPhases.Perc.RIGHT.GAITCYCLE.value.mean = round( mean(GaitPhases.Perc.RIGHT.GAITCYCLE.value.data), 1);
+GaitPhases.Perc.RIGHT.GAITCYCLE.value.stdev = round( std(GaitPhases.Perc.RIGHT.GAITCYCLE.value.data), 1);
 
 % Stance
 GaitPhases.Time.RIGHT.STANCE.value.data = [R_EST - R_BST];
-GaitPhases.Time.RIGHT.STANCE.value.mean = mean(GaitPhases.Time.RIGHT.STANCE.value.data);
-GaitPhases.Time.RIGHT.STANCE.value.stdev = std(GaitPhases.Time.RIGHT.STANCE.value.data);
+GaitPhases.Time.RIGHT.STANCE.value.mean = round( mean(GaitPhases.Time.RIGHT.STANCE.value.data), 2);
+GaitPhases.Time.RIGHT.STANCE.value.stdev = round( std(GaitPhases.Time.RIGHT.STANCE.value.data), 2);
 %
-GaitPhases.Perc.RIGHT.STANCE.value.data = GaitPhases.Time.RIGHT.STANCE.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100;
-GaitPhases.Perc.RIGHT.STANCE.value.mean = mean(GaitPhases.Perc.RIGHT.STANCE.value.data);
-GaitPhases.Perc.RIGHT.STANCE.value.stdev = std(GaitPhases.Perc.RIGHT.STANCE.value.data);
+GaitPhases.Perc.RIGHT.STANCE.value.data = round( GaitPhases.Time.RIGHT.STANCE.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100, 1);
+GaitPhases.Perc.RIGHT.STANCE.value.mean = round( mean(GaitPhases.Perc.RIGHT.STANCE.value.data), 1);
+GaitPhases.Perc.RIGHT.STANCE.value.stdev = round( std(GaitPhases.Perc.RIGHT.STANCE.value.data), 1);
 % swing
 GaitPhases.Time.RIGHT.SWING.value.data = [R_ESW - R_BSW];
-GaitPhases.Time.RIGHT.SWING.value.mean = mean(GaitPhases.Time.RIGHT.SWING.value.data);
-GaitPhases.Time.RIGHT.SWING.value.stdev = std(GaitPhases.Time.RIGHT.SWING.value.data);
+GaitPhases.Time.RIGHT.SWING.value.mean = round( mean(GaitPhases.Time.RIGHT.SWING.value.data), 2);
+GaitPhases.Time.RIGHT.SWING.value.stdev = round( std(GaitPhases.Time.RIGHT.SWING.value.data), 2);
 %
-GaitPhases.Perc.RIGHT.SWING.value.data = GaitPhases.Time.RIGHT.SWING.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100;
-GaitPhases.Perc.RIGHT.SWING.value.mean = mean(GaitPhases.Perc.RIGHT.SWING.value.data);
-GaitPhases.Perc.RIGHT.SWING.value.stdev = std(GaitPhases.Perc.RIGHT.SWING.value.data);
+GaitPhases.Perc.RIGHT.SWING.value.data = round( GaitPhases.Time.RIGHT.SWING.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100, 1);
+GaitPhases.Perc.RIGHT.SWING.value.mean = round( mean(GaitPhases.Perc.RIGHT.SWING.value.data), 1);
+GaitPhases.Perc.RIGHT.SWING.value.stdev = round( std(GaitPhases.Perc.RIGHT.SWING.value.data), 1);
 % load response
 if R_BST(1) > L_BST(1)
     BT = R_BST; % BS stands for Begin Time
@@ -506,16 +507,16 @@ else
     flag = 0;
 end
 GaitPhases.Time.RIGHT.LOADRESPONSE.value.data = [ET - BT];
-GaitPhases.Time.RIGHT.LOADRESPONSE.value.mean = mean(GaitPhases.Time.RIGHT.LOADRESPONSE.value.data);
-GaitPhases.Time.RIGHT.LOADRESPONSE.value.stdev = std(GaitPhases.Time.RIGHT.LOADRESPONSE.value.data);
+GaitPhases.Time.RIGHT.LOADRESPONSE.value.mean = round( mean(GaitPhases.Time.RIGHT.LOADRESPONSE.value.data), 2);
+GaitPhases.Time.RIGHT.LOADRESPONSE.value.stdev = round( std(GaitPhases.Time.RIGHT.LOADRESPONSE.value.data), 2);
 %
 if flag
-    GaitPhases.Perc.RIGHT.LOADRESPONSE.value.data = GaitPhases.Time.RIGHT.LOADRESPONSE.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100;
+    GaitPhases.Perc.RIGHT.LOADRESPONSE.value.data = round( GaitPhases.Time.RIGHT.LOADRESPONSE.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100, 1);
 else
-    GaitPhases.Perc.RIGHT.LOADRESPONSE.value.data = GaitPhases.Time.RIGHT.LOADRESPONSE.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data(end-1)*100;
+    GaitPhases.Perc.RIGHT.LOADRESPONSE.value.data = round( GaitPhases.Time.RIGHT.LOADRESPONSE.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data(end-1)*100, 1);
 end
-GaitPhases.Perc.RIGHT.LOADRESPONSE.value.mean = mean(GaitPhases.Perc.RIGHT.LOADRESPONSE.value.data);
-GaitPhases.Perc.RIGHT.LOADRESPONSE.value.stdev = std(GaitPhases.Perc.RIGHT.GAITCYCLE.value.data);
+GaitPhases.Perc.RIGHT.LOADRESPONSE.value.mean = round( mean(GaitPhases.Perc.RIGHT.LOADRESPONSE.value.data), 1);
+GaitPhases.Perc.RIGHT.LOADRESPONSE.value.stdev = round( std(GaitPhases.Perc.RIGHT.LOADRESPONSE.value.data), 1);
 % Preswing
 if R_BST(1) > L_BST(1)
     BT = L_ESW; % BS stands for Begin Time
@@ -525,12 +526,12 @@ else
     ET = R_EST; % ES stands for End Time
 end
 GaitPhases.Time.RIGHT.PRESWING.value.data = [ET - BT];
-GaitPhases.Time.RIGHT.PRESWING.value.mean = mean(GaitPhases.Time.RIGHT.PRESWING.value.data);
-GaitPhases.Time.RIGHT.PRESWING.value.stdev = std(GaitPhases.Time.RIGHT.PRESWING.value.data);
+GaitPhases.Time.RIGHT.PRESWING.value.mean = round( mean(GaitPhases.Time.RIGHT.PRESWING.value.data), 2);
+GaitPhases.Time.RIGHT.PRESWING.value.stdev = round( std(GaitPhases.Time.RIGHT.PRESWING.value.data), 2);
 %
-GaitPhases.Perc.RIGHT.PRESWING.value.data = GaitPhases.Time.RIGHT.PRESWING.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100;
-GaitPhases.Perc.RIGHT.PRESWING.value.mean = mean(GaitPhases.Perc.RIGHT.PRESWING.value.data);
-GaitPhases.Perc.RIGHT.PRESWING.value.stdev = std(GaitPhases.Perc.RIGHT.PRESWING.value.data);
+GaitPhases.Perc.RIGHT.PRESWING.value.data = round( GaitPhases.Time.RIGHT.PRESWING.value.data./GaitPhases.Time.RIGHT.GAITCYCLE.value.data*100, 1);
+GaitPhases.Perc.RIGHT.PRESWING.value.mean = round( mean(GaitPhases.Perc.RIGHT.PRESWING.value.data), 1);
+GaitPhases.Perc.RIGHT.PRESWING.value.stdev = round( std(GaitPhases.Perc.RIGHT.PRESWING.value.data), 1);
 
 %%%
 
@@ -576,10 +577,10 @@ GaitPhases.Perc.RIGHT.PRESWING.value.stdev = std(GaitPhases.Perc.RIGHT.PRESWING.
 
 
     Outputfilename = strcat(OUTPUTdir, '/pi_gaitphases_time.yml');
-    StoreMatrix2Yml(Outputfilename, data_time, rowLabels, colLabels);
+    StoreMatrix2Yml(Outputfilename, data_time, rowLabels, colLabels, 2);
     %WriteYaml(Outputfilename, GaitPhases.Time,0);
     Outputfilename = strcat(OUTPUTdir, '/pi_gaitphases_perc.yml');
-    StoreMatrix2Yml(Outputfilename, data_perc, rowLabels, colLabels);
+    StoreMatrix2Yml(Outputfilename, data_perc, rowLabels, colLabels, 1);
     %WriteYaml(Outputfilename, GaitPhases.Perc,0);
 
 
@@ -592,23 +593,23 @@ for iCh = EMGchannels
         % LeftStance
         BS = floor( L_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
         ES = floor( L_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        ActivationIndexes(iCh).LEFT.STANCE.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh) );
+        ActivationIndexes(iCh).LEFT.STANCE.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh) ), 3);
         
         % LeftSwing
         BS = floor( L_BSW( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
         ES = floor( L_ESW( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        ActivationIndexes(iCh).LEFT.SWING.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh) );
+        ActivationIndexes(iCh).LEFT.SWING.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh) ), 3);
         
         % LeftLoadResponse
         if L_BST(1) > R_BST(1)
             BS = floor( L_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
             ES = floor( R_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh) );
+        ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh) ), 3);
         else
             if iStp ~= NumLeftSteps
                 BS = floor( L_BST( iStp + 1) * EMG(3).sR ); % BS stands for Begin Sample
                 ES = floor( R_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-                ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh) );            
+                ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh) ), 3);            
             end
         end
         
@@ -620,25 +621,25 @@ for iCh = EMGchannels
             BS = floor( R_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
             ES = floor( L_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
         end
-        ActivationIndexes(iCh).LEFT.PRESWING.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  );           
+        ActivationIndexes(iCh).LEFT.PRESWING.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  ), 3);           
         
         % leftGaitCycle
         BS = floor( L_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
         ES = floor( L_ESW( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        ActivationIndexes(iCh).LEFT.GAITCYCLE.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  );
+        ActivationIndexes(iCh).LEFT.GAITCYCLE.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  ), 3);
     end % for iStp = 1 : NumLeftSteps
     
     % left mean and standard deviations
-    ActivationIndexes(iCh).LEFT.STANCE.value.mean = mean( ActivationIndexes(iCh).LEFT.STANCE.value.data );
-    ActivationIndexes(iCh).LEFT.STANCE.value.stdev = std( ActivationIndexes(iCh).LEFT.STANCE.value.data );
-    ActivationIndexes(iCh).LEFT.SWING.value.mean = mean( ActivationIndexes(iCh).LEFT.SWING.value.data );
-    ActivationIndexes(iCh).LEFT.SWING.value.stdev = std( ActivationIndexes(iCh).LEFT.SWING.value.data );
-    ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.mean = mean( ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.data );
-    ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.stdev = std( ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.data );
-    ActivationIndexes(iCh).LEFT.PRESWING.value.mean = mean( ActivationIndexes(iCh).LEFT.PRESWING.value.data );
-    ActivationIndexes(iCh).LEFT.PRESWING.value.stdev = std( ActivationIndexes(iCh).LEFT.PRESWING.value.data );
-    ActivationIndexes(iCh).LEFT.GAITCYCLE.value.mean = mean( ActivationIndexes(iCh).LEFT.GAITCYCLE.value.data );
-    ActivationIndexes(iCh).LEFT.GAITCYCLE.value.stdev = std( ActivationIndexes(iCh).LEFT.GAITCYCLE.value.data );
+    ActivationIndexes(iCh).LEFT.STANCE.value.mean = round( mean( ActivationIndexes(iCh).LEFT.STANCE.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.STANCE.value.stdev = round( std( ActivationIndexes(iCh).LEFT.STANCE.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.SWING.value.mean = round( mean( ActivationIndexes(iCh).LEFT.SWING.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.SWING.value.stdev = round( std( ActivationIndexes(iCh).LEFT.SWING.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.mean = round( mean( ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.stdev = round( std( ActivationIndexes(iCh).LEFT.LOADRESPONSE.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.PRESWING.value.mean = round( mean( ActivationIndexes(iCh).LEFT.PRESWING.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.PRESWING.value.stdev = round( std( ActivationIndexes(iCh).LEFT.PRESWING.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.GAITCYCLE.value.mean = round( mean( ActivationIndexes(iCh).LEFT.GAITCYCLE.value.data ), 3);
+    ActivationIndexes(iCh).LEFT.GAITCYCLE.value.stdev = round( std( ActivationIndexes(iCh).LEFT.GAITCYCLE.value.data ), 3);
     
     %%%
        
@@ -646,23 +647,23 @@ for iCh = EMGchannels
         % RightStance
         BS = floor( R_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
         ES = floor( R_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        ActivationIndexes(iCh).RIGHT.STANCE.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  );
+        ActivationIndexes(iCh).RIGHT.STANCE.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  ), 3);
         
         % RightSwing
         BS = floor( R_BSW( iStp ) * EMG(3).sR ); % BS stands for Begin sample
         ES = floor( R_ESW( iStp ) * EMG(3).sR ) ; % ES stands for End sample
-        ActivationIndexes(iCh).RIGHT.SWING.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  );
+        ActivationIndexes(iCh).RIGHT.SWING.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  ), 3);
         
         % RightLoadResponse
         if R_BST(1) > L_BST(1)
             BS = floor( R_BST( iStp ) * EMG(3).sR ); % BS stands for Begin sample
             ES = floor( L_EST( iStp ) * EMG(3).sR ) ; % ES stands for End sample
-        ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  );    
+        ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  ), 3);    
         else
             if iStp ~= NumRightSteps
                 BS = floor( R_BST( iStp + 1) * EMG(3).sR ); % BS stands for Begin sample
                 ES = floor( L_EST( iStp ) * EMG(3).sR ) ; % ES stands for End sample
-                ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  );
+                ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.data( iStp )  =  round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  ), 3);
             end
         end
         
@@ -674,26 +675,26 @@ for iCh = EMGchannels
             BS = floor( L_BST( iStp ) * EMG(3).sR ); % BS stands for Begin sample
             ES = floor( R_EST( iStp ) * EMG(3).sR ) ; % ES stands for End sample
         end
-        ActivationIndexes(iCh).RIGHT.PRESWING.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  );
+        ActivationIndexes(iCh).RIGHT.PRESWING.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  ), 3);
 
         % leftGaitCycle
         BS = floor( R_BST( iStp ) * EMG(3).sR ); % BS stands for Begin sample
         ES = floor( R_ESW( iStp ) * EMG(3).sR ) ; % ES stands for End sample
-        ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.data( iStp )  = discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  );
+        ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.data( iStp )  = round( discrete_integrate( Time(BS:ES), Data(BS:ES,iCh)  ), 3);
     end %or iStp = 1 : NumRightSteps
     
     
     % right mean and standard deviations
-    ActivationIndexes(iCh).RIGHT.STANCE.value.mean = mean( ActivationIndexes(iCh).RIGHT.STANCE.value.data );
-    ActivationIndexes(iCh).RIGHT.STANCE.value.stdev = std( ActivationIndexes(iCh).RIGHT.STANCE.value.data );
-    ActivationIndexes(iCh).RIGHT.SWING.value.mean = mean( ActivationIndexes(iCh).RIGHT.SWING.value.data );
-    ActivationIndexes(iCh).RIGHT.SWING.value.stdev = std( ActivationIndexes(iCh).RIGHT.SWING.value.data );
-    ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.mean = mean( ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.data );
-    ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.stdev = std( ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.data );
-    ActivationIndexes(iCh).RIGHT.PRESWING.value.mean = mean( ActivationIndexes(iCh).RIGHT.PRESWING.value.data );
-    ActivationIndexes(iCh).RIGHT.PRESWING.value.stdev = std( ActivationIndexes(iCh).RIGHT.PRESWING.value.data );
-    ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.mean = mean( ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.data );
-    ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.stdev = std( ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.data );
+    ActivationIndexes(iCh).RIGHT.STANCE.value.mean = round( mean( ActivationIndexes(iCh).RIGHT.STANCE.value.data ) , 3);
+    ActivationIndexes(iCh).RIGHT.STANCE.value.stdev = round( std( ActivationIndexes(iCh).RIGHT.STANCE.value.data ), 3);
+    ActivationIndexes(iCh).RIGHT.SWING.value.mean = round( mean( ActivationIndexes(iCh).RIGHT.SWING.value.data ), 3);
+    ActivationIndexes(iCh).RIGHT.SWING.value.stdev = round( std( ActivationIndexes(iCh).RIGHT.SWING.value.data ), 3);
+    ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.mean = round( mean( ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.data ), 3);
+    ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.stdev = round( std( ActivationIndexes(iCh).RIGHT.LOADRESPONSE.value.data ), 3);
+    ActivationIndexes(iCh).RIGHT.PRESWING.value.mean = round( mean( ActivationIndexes(iCh).RIGHT.PRESWING.value.data ), 3);
+    ActivationIndexes(iCh).RIGHT.PRESWING.value.stdev = round( std( ActivationIndexes(iCh).RIGHT.PRESWING.value.data ), 3);
+    ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.mean = round( mean( ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.data ), 3);
+    ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.stdev = round( std( ActivationIndexes(iCh).RIGHT.GAITCYCLE.value.data ), 3);
     
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -730,7 +731,7 @@ for iCh = EMGchannels
     data = [data_left; data_right];
      
     Outputfilename = strcat(OUTPUTdir, '/pi_actindex_', EMG(1).Name{iCh},'.yml');
-    StoreMatrix2Yml(Outputfilename, data, rowLabels, colLabels);
+    StoreMatrix2Yml(Outputfilename, data, rowLabels, colLabels, 3);
     %WriteYaml(Outputfilename, ActivationIndexes(iCh),0);
 
 end
@@ -748,23 +749,23 @@ for iCp = 1 : NumCouples
         % LeftStance
         BS = floor( L_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
         ES = floor( L_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        CocontractionIndexes(iCp).LEFT.STANCE.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+        CocontractionIndexes(iCp).LEFT.STANCE.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
         
         % LeftSwing
         BS = floor( L_BSW( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
         ES = floor( L_ESW( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        CocontractionIndexes(iCp).LEFT.SWING.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+        CocontractionIndexes(iCp).LEFT.SWING.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
         
         % LeftLoadResponse
         if L_BST(1) > R_BST(1)
             BS = floor( L_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
             ES = floor( R_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+        CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
         else
             if iStp ~= NumLeftSteps
                 BS = floor( L_BST( iStp + 1) * EMG(3).sR ); % BS stands for Begin Sample
                 ES = floor( R_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-                CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );            
+                CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);            
             end
         end
         
@@ -776,24 +777,24 @@ for iCp = 1 : NumCouples
             BS = floor( R_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
             ES = floor( L_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
         end
-        CocontractionIndexes(iCp).LEFT.PRESWING.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );           
+        CocontractionIndexes(iCp).LEFT.PRESWING.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);           
         
         % leftGaitCycle
         BS = floor( L_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
         ES = floor( L_ESW( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+        CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
     end
     % left mean and standard deviations
-    CocontractionIndexes(iCp).LEFT.STANCE.value.mean = mean( CocontractionIndexes(iCp).LEFT.STANCE.value.data );
-    CocontractionIndexes(iCp).LEFT.STANCE.value.stdev = std( CocontractionIndexes(iCp).LEFT.STANCE.value.data );
-    CocontractionIndexes(iCp).LEFT.SWING.value.mean = mean( CocontractionIndexes(iCp).LEFT.SWING.value.data );
-    CocontractionIndexes(iCp).LEFT.SWING.value.stdev = std( CocontractionIndexes(iCp).LEFT.SWING.value.data );
-    CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.mean = mean( CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.data );
-    CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.stdev = std( CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.data );
-    CocontractionIndexes(iCp).LEFT.PRESWING.value.mean = mean( CocontractionIndexes(iCp).LEFT.PRESWING.value.data );
-    CocontractionIndexes(iCp).LEFT.PRESWING.value.stdev = std( CocontractionIndexes(iCp).LEFT.PRESWING.value.data );
-    CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.mean = mean( CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.data );
-    CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.stdev = std( CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.data );
+    CocontractionIndexes(iCp).LEFT.STANCE.value.mean = round( mean( CocontractionIndexes(iCp).LEFT.STANCE.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.STANCE.value.stdev = round( std( CocontractionIndexes(iCp).LEFT.STANCE.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.SWING.value.mean = round( mean( CocontractionIndexes(iCp).LEFT.SWING.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.SWING.value.stdev = round( std( CocontractionIndexes(iCp).LEFT.SWING.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.mean = round( mean( CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.stdev = round( std( CocontractionIndexes(iCp).LEFT.LOADRESPONSE.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.PRESWING.value.mean = round( mean( CocontractionIndexes(iCp).LEFT.PRESWING.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.PRESWING.value.stdev = round( std( CocontractionIndexes(iCp).LEFT.PRESWING.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.mean = round( mean( CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.data ), 3);
+    CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.stdev = round( std( CocontractionIndexes(iCp).LEFT.GAITCYCLE.value.data ), 3);
     
     %%%
        
@@ -801,23 +802,23 @@ for iCp = 1 : NumCouples
         % RightStance
         BS = floor( R_BST( iStp ) * EMG(3).sR ); % BS stands for Begin Sample
         ES = floor( R_EST( iStp ) * EMG(3).sR ) ; % ES stands for End Sample
-        CocontractionIndexes(iCp).RIGHT.STANCE.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+        CocontractionIndexes(iCp).RIGHT.STANCE.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
         
         % RightSwing
         BS = floor( R_BSW( iStp ) * EMG(3).sR ); % BS stands for Begin sample
         ES = floor( R_ESW( iStp ) * EMG(3).sR ) ; % ES stands for End sample
-        CocontractionIndexes(iCp).RIGHT.SWING.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+        CocontractionIndexes(iCp).RIGHT.SWING.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
         
         % RightLoadResponse
         if R_BST(1) > L_BST(1)
             BS = floor( R_BST( iStp ) * EMG(3).sR ); % BS stands for Begin sample
             ES = floor( L_EST( iStp ) * EMG(3).sR ) ; % ES stands for End sample
-        CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );    
+        CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);    
         else
             if iStp ~= NumRightSteps
                 BS = floor( R_BST( iStp + 1) * EMG(3).sR ); % BS stands for Begin sample
                 ES = floor( L_EST( iStp ) * EMG(3).sR ) ; % ES stands for End sample
-                CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+                CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
             end
         end
         
@@ -829,24 +830,24 @@ for iCp = 1 : NumCouples
             BS = floor( L_BST( iStp ) * EMG(3).sR ); % BS stands for Begin sample
             ES = floor( R_EST( iStp ) * EMG(3).sR ) ; % ES stands for End sample
         end
-        CocontractionIndexes(iCp).RIGHT.PRESWING.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+        CocontractionIndexes(iCp).RIGHT.PRESWING.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
 
         % leftGaitCycle
         BS = floor( R_BST( iStp ) * EMG(3).sR ); % BS stands for Begin sample
         ES = floor( R_ESW( iStp ) * EMG(3).sR ) ; % ES stands for End sample
-        CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.data( iStp )  = cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  );
+        CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.data( iStp )  = round( cocontraction_winter( Time(BS:ES), Data(BS:ES,Ch_1), Data(BS:ES,Ch_2)  ), 3);
     end
     % right mean and standard deviations
-    CocontractionIndexes(iCp).RIGHT.STANCE.value.mean = mean( CocontractionIndexes(iCp).RIGHT.STANCE.value.data );
-    CocontractionIndexes(iCp).RIGHT.STANCE.value.stdev = std( CocontractionIndexes(iCp).RIGHT.STANCE.value.data );
-    CocontractionIndexes(iCp).RIGHT.SWING.value.mean = mean( CocontractionIndexes(iCp).RIGHT.SWING.value.data );
-    CocontractionIndexes(iCp).RIGHT.SWING.value.stdev = std( CocontractionIndexes(iCp).RIGHT.SWING.value.data );
-    CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.mean = mean( CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.data );
-    CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.stdev = std( CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.data );
-    CocontractionIndexes(iCp).RIGHT.PRESWING.value.mean = mean( CocontractionIndexes(iCp).RIGHT.PRESWING.value.data );
-    CocontractionIndexes(iCp).RIGHCocontractionIndexes(iCp).RIGHTT.PRESWING.value.stdev = std( CocontractionIndexes(iCp).RIGHT.PRESWING.value.data );
-    CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.mean = mean( CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.data );
-    CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.stdev = std( CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.data );
+    CocontractionIndexes(iCp).RIGHT.STANCE.value.mean = round( mean( CocontractionIndexes(iCp).RIGHT.STANCE.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHT.STANCE.value.stdev = round( std( CocontractionIndexes(iCp).RIGHT.STANCE.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHT.SWING.value.mean = round( mean( CocontractionIndexes(iCp).RIGHT.SWING.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHT.SWING.value.stdev = round( std( CocontractionIndexes(iCp).RIGHT.SWING.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.mean = round( mean( CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.stdev = round( std( CocontractionIndexes(iCp).RIGHT.LOADRESPONSE.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHT.PRESWING.value.mean = round( mean( CocontractionIndexes(iCp).RIGHT.PRESWING.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHCocontractionIndexes(iCp).RIGHTT.PRESWING.value.stdev = round( std( CocontractionIndexes(iCp).RIGHT.PRESWING.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.mean = round( mean( CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.data ), 3);
+    CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.stdev = round( std( CocontractionIndexes(iCp).RIGHT.GAITCYCLE.value.data ), 3);
     
     %values
     data_left = nan(5,NumSteps);
@@ -868,7 +869,7 @@ for iCp = 1 : NumCouples
     data = [data_left; data_right];
  
     Outputfilename = strcat( OUTPUTdir, '/pi_cocoindex_',EMG(1).Name{Ch_1} ,'-vs-', EMG(1).Name{Ch_2},'.yml');
-    StoreMatrix2Yml(Outputfilename, data, rowLabels, colLabels);
+    StoreMatrix2Yml(Outputfilename, data, rowLabels, colLabels, 3);
  %  WriteYaml(Outputfilename, CocontractionIndexes(iCp),0);
    
 end

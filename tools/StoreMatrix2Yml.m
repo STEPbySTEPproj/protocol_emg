@@ -1,8 +1,8 @@
-function is_ok = StoreMatrix2Yml(filenameOUT, data, rowLabels, colLabels)
+function is_ok = StoreMatrix2Yml(filenameOUT, data, rowLabels, colLabels,numdigit)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%                                                                     %%%
-%%% is_ok = StoreMatrix2Yml(data, rowLabels, columnLabels)             %%%
+%%% is_ok = StoreMatrix2Yml(data, rowLabels, columnLabels, numdigit )   %%%
 %%%                                                                     %%%
 %%%     IN: filenameOUT -->     STRING                                  %%%
 %%%                             output file name                        %%%
@@ -12,6 +12,8 @@ function is_ok = StoreMatrix2Yml(filenameOUT, data, rowLabels, colLabels)
 %%%                             with names of rows                      %%%    
 %%%         colLables   -->     CELL ARRAY of STRINGS                   %%%
 %%%                             with names of columns                   %%% 
+%%%         numdigit   -->      INT                                     %%%
+%%%                             number of digits                        %%% 
 %%%                                                                     %%%    
 %%%                                                                     %%%    
 %%%     Author:     Marco Caimmi                                        %%%
@@ -49,11 +51,11 @@ ColLabel_str =strcat( ColLabel_str,("]\n") );
 
 %%%%% build string with matrix data
 value_str = "value: [ ";
-%value_str = sprintf( "%s [ " , value_str);
+numdigitstr = strcat("%s%.", int2str(numdigit), "f");
 for i = 1:NumRows
     value_str = strcat( value_str, "[" );
     for j = 1:NumCols
-        value_str = sprintf("%s%.5f", value_str, data(i,j));
+        value_str = sprintf(numdigitstr, value_str, data(i,j));
         if j ~= NumCols
             value_str = sprintf("%s, ", value_str);
         else
